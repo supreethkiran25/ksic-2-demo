@@ -1,5 +1,7 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 
 function PalaceSketch() {
   return (
@@ -26,17 +28,38 @@ function PalaceSketch() {
 }
 
 export default function BetweenHero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.currentTime = 0;
+    const attempt = video.play();
+    if (attempt) {
+      attempt.catch(() => {
+        /* autoplay may be blocked; muted + playsInline should usually allow it */
+      });
+    }
+  }, []);
+
   return (
     <section className="between-hero" id="between" aria-label="The art of Mysore silk">
       <div className="between-hero__inner">
         <figure className="between-hero__media">
-          <Image
-            src="/hands-weave.jpg?v=powerloom"
-            alt="Power loom weaving Mysore silk in the factory"
-            fill
-            sizes="(max-width: 900px) 100vw, 48vw"
-            className="between-hero__img"
-          />
+          <video
+            ref={videoRef}
+            className="between-hero__video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/hero-bg.png"
+            aria-label="Mysore silk in motion"
+          >
+            <source src="/hero-home.mp4?v=8bfeca5e" type="video/mp4" />
+          </video>
         </figure>
 
         <div className="between-hero__panel">
